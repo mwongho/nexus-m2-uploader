@@ -1,0 +1,14 @@
+subprojects {
+
+
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+    
+   	sourceCompatibility = 1.8
+	targetCompatibility = 1.8
+ 
+    repositories {
+        maven { url "http://central.maven.org/maven2/" }
+    	maven { url "http://plugins.gradle.org/m2/" }
+    }
+}

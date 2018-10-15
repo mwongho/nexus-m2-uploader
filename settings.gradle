@@ -1,0 +1,4 @@
+rootProject.name = 'nexus-m2-uploader'
+
+include 'nexus-client'
+include 'nexus-upload-app'

@@ -1,0 +1,1671 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "3.11.0-01",
+    "title" : "Nexus Repository Manager REST API"
+  },
+  "basePath" : "/service/rest/",
+  "tags" : [ {
+    "name" : "read-only"
+  }, {
+    "name" : "tasks"
+  }, {
+    "name" : "script"
+  }, {
+    "name" : "assets"
+  }, {
+    "name" : "components"
+  }, {
+    "name" : "search"
+  }, {
+    "name" : "formats"
+  }, {
+    "name" : "repositories"
+  } ],
+  "paths" : {
+    "/v1/read-only/freeze" : {
+      "post" : {
+        "tags" : [ "read-only" ],
+        "summary" : "Enable read-only",
+        "description" : "",
+        "operationId" : "freeze",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "System is now read-only"
+          },
+          "403" : {
+            "description" : "Authentication required"
+          },
+          "404" : {
+            "description" : "No change to read-only state"
+          }
+        }
+      }
+    },
+    "/v1/read-only/force-release" : {
+      "post" : {
+        "tags" : [ "read-only" ],
+        "summary" : "Forcibly release read-only",
+        "description" : "Forcibly release read-only status, including System initiated tasks. Warning: may result in data loss.",
+        "operationId" : "forceRelease",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "System is no longer read-only"
+          },
+          "403" : {
+            "description" : "Authentication required"
+          },
+          "404" : {
+            "description" : "No change to read-only state"
+          }
+        }
+      }
+    },
+    "/v1/read-only/release" : {
+      "post" : {
+        "tags" : [ "read-only" ],
+        "summary" : "Release read-only",
+        "description" : "Release administrator initiated read-only status. Will not release read-only caused by system tasks.",
+        "operationId" : "release",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "204" : {
+            "description" : "System is no longer read-only"
+          },
+          "403" : {
+            "description" : "Authentication required"
+          },
+          "404" : {
+            "description" : "No change to read-only state"
+          }
+        }
+      }
+    },
+    "/v1/read-only" : {
+      "get" : {
+        "tags" : [ "read-only" ],
+        "summary" : "Get read-only state",
+        "description" : "",
+        "operationId" : "get",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ReadOnlyState"
+            }
+          }
+        }
+      }
+    },
+    "/v1/tasks" : {
+      "get" : {
+        "tags" : [ "tasks" ],
+        "summary" : "List tasks",
+        "description" : "",
+        "operationId" : "getTasks",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "type",
+          "in" : "query",
+          "description" : "Type of the tasks to get",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/PageTaskXO"
+            }
+          }
+        }
+      }
+    },
+    "/v1/tasks/{id}" : {
+      "get" : {
+        "tags" : [ "tasks" ],
+        "summary" : "Get a single task by id",
+        "description" : "",
+        "operationId" : "getTaskById",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Id of the task to get",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/TaskXO"
+            }
+          },
+          "404" : {
+            "description" : "Task not found"
+          }
+        }
+      }
+    },
+    "/v1/tasks/{id}/run" : {
+      "post" : {
+        "tags" : [ "tasks" ],
+        "summary" : "Run task",
+        "description" : "",
+        "operationId" : "run",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Id of the task to run",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Task was run"
+          },
+          "404" : {
+            "description" : "Task not found"
+          }
+        }
+      }
+    },
+    "/v1/tasks/{id}/stop" : {
+      "post" : {
+        "tags" : [ "tasks" ],
+        "summary" : "Stop task",
+        "description" : "",
+        "operationId" : "stop",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Id of the task to stop",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Task was stopped"
+          },
+          "409" : {
+            "description" : "Unable to stop task"
+          },
+          "404" : {
+            "description" : "Task not found"
+          }
+        }
+      }
+    },
+    "/v1/script/{name}" : {
+      "get" : {
+        "tags" : [ "script" ],
+        "summary" : "Read stored script by name",
+        "description" : "",
+        "operationId" : "read",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "name",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ScriptXO"
+            }
+          },
+          "404" : {
+            "description" : "No script with the specified name"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "script" ],
+        "summary" : "Update stored script by name",
+        "description" : "",
+        "operationId" : "edit",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "name",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/ScriptXO"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Script was updated"
+          },
+          "404" : {
+            "description" : "No script with the specified name"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "script" ],
+        "summary" : "Delete stored script by name",
+        "description" : "",
+        "operationId" : "delete",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "name",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Script was deleted"
+          },
+          "404" : {
+            "description" : "No script with the specified name"
+          }
+        }
+      }
+    },
+    "/v1/script" : {
+      "get" : {
+        "tags" : [ "script" ],
+        "summary" : "List all stored scripts",
+        "description" : "",
+        "operationId" : "browse",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/ScriptXO"
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "script" ],
+        "summary" : "Add a new script",
+        "description" : "",
+        "operationId" : "add",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/ScriptXO"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Script was added"
+          }
+        }
+      }
+    },
+    "/v1/script/{name}/run" : {
+      "post" : {
+        "tags" : [ "script" ],
+        "summary" : "Run stored script by name",
+        "description" : "",
+        "operationId" : "run_1",
+        "consumes" : [ "text/plain" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "name",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ScriptResultXO"
+            }
+          },
+          "404" : {
+            "description" : "No script with the specified name"
+          },
+          "500" : {
+            "description" : "Script execution failed with exception"
+          }
+        }
+      }
+    },
+    "/v1/assets/{id}" : {
+      "get" : {
+        "tags" : [ "assets" ],
+        "summary" : "Get a single asset",
+        "description" : "",
+        "operationId" : "getAssetById",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Id of the asset to get",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/AssetXO"
+            }
+          },
+          "403" : {
+            "description" : "Insufficient permissions to get asset"
+          },
+          "404" : {
+            "description" : "Asset not found"
+          },
+          "422" : {
+            "description" : "Malformed ID"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "assets" ],
+        "summary" : "Delete a single asset",
+        "description" : "",
+        "operationId" : "deleteAsset",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Id of the asset to delete",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Asset was successfully deleted"
+          },
+          "403" : {
+            "description" : "Insufficient permissions to delete asset"
+          },
+          "404" : {
+            "description" : "Asset not found"
+          },
+          "422" : {
+            "description" : "Malformed ID"
+          }
+        }
+      }
+    },
+    "/v1/assets" : {
+      "get" : {
+        "tags" : [ "assets" ],
+        "summary" : "List assets",
+        "description" : "",
+        "operationId" : "getAssets",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "continuationToken",
+          "in" : "query",
+          "description" : "A token returned by a prior request. If present, the next page of results are returned",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "repository",
+          "in" : "query",
+          "description" : "Repository from which you would like to retrieve assets.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/PageAssetXO"
+            }
+          },
+          "403" : {
+            "description" : "Insufficient permissions to list assets"
+          },
+          "422" : {
+            "description" : "Parameter 'repository' is required"
+          }
+        }
+      }
+    },
+    "/v1/components/{id}" : {
+      "get" : {
+        "tags" : [ "components" ],
+        "summary" : "Get a single component",
+        "description" : "",
+        "operationId" : "getComponentById",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "ID of the component to retrieve",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ComponentXO"
+            }
+          },
+          "403" : {
+            "description" : "Insufficient permissions to get component"
+          },
+          "404" : {
+            "description" : "Component not found"
+          },
+          "422" : {
+            "description" : "Malformed ID"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "components" ],
+        "summary" : "Delete a single component",
+        "description" : "",
+        "operationId" : "deleteComponent",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "ID of the component to delete",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Component was successfully deleted"
+          },
+          "403" : {
+            "description" : "Insufficient permissions to delete component"
+          },
+          "404" : {
+            "description" : "Component not found"
+          },
+          "422" : {
+            "description" : "Malformed ID"
+          }
+        }
+      }
+    },
+    "/v1/components" : {
+      "get" : {
+        "tags" : [ "components" ],
+        "summary" : "List components",
+        "description" : "",
+        "operationId" : "getComponents",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "continuationToken",
+          "in" : "query",
+          "description" : "A token returned by a prior request. If present, the next page of results are returned",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "repository",
+          "in" : "query",
+          "description" : "Repository from which you would like to retrieve components",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/PageComponentXO"
+            }
+          },
+          "403" : {
+            "description" : "Insufficient permissions to list components"
+          },
+          "422" : {
+            "description" : "Parameter 'repository' is required"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "components" ],
+        "summary" : "Upload a single component",
+        "description" : "",
+        "operationId" : "uploadComponent",
+        "consumes" : [ "multipart/form-data" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "repository",
+          "in" : "query",
+          "description" : "Name of the repository to which you would like to upload the component",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "pypi.asset",
+          "in" : "formData",
+          "description" : "pypi Asset ",
+          "required" : false,
+          "type" : "file"
+        }, {
+          "name" : "rubygems.asset",
+          "in" : "formData",
+          "description" : "rubygems Asset ",
+          "required" : false,
+          "type" : "file"
+        }, {
+          "name" : "nuget.asset",
+          "in" : "formData",
+          "description" : "nuget Asset ",
+          "required" : false,
+          "type" : "file"
+        }, {
+          "name" : "maven2.groupId",
+          "in" : "formData",
+          "description" : "maven2 Group ID",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "maven2.artifactId",
+          "in" : "formData",
+          "description" : "maven2 Artifact ID",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "maven2.version",
+          "in" : "formData",
+          "description" : "maven2 Version",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "maven2.generate-pom",
+          "in" : "formData",
+          "description" : "maven2 Generate a POM file with these coordinates",
+          "required" : false,
+          "type" : "boolean"
+        }, {
+          "name" : "maven2.packaging",
+          "in" : "formData",
+          "description" : "maven2 Packaging",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "maven2.asset1",
+          "in" : "formData",
+          "description" : "maven2 Asset 1",
+          "required" : false,
+          "type" : "file"
+        }, {
+          "name" : "maven2.asset1.classifier",
+          "in" : "formData",
+          "description" : "maven2 Asset 1 Classifier",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "maven2.asset1.extension",
+          "in" : "formData",
+          "description" : "maven2 Asset 1 Extension",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "maven2.asset2",
+          "in" : "formData",
+          "description" : "maven2 Asset 2",
+          "required" : false,
+          "type" : "file"
+        }, {
+          "name" : "maven2.asset2.classifier",
+          "in" : "formData",
+          "description" : "maven2 Asset 2 Classifier",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "maven2.asset2.extension",
+          "in" : "formData",
+          "description" : "maven2 Asset 2 Extension",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "maven2.asset3",
+          "in" : "formData",
+          "description" : "maven2 Asset 3",
+          "required" : false,
+          "type" : "file"
+        }, {
+          "name" : "maven2.asset3.classifier",
+          "in" : "formData",
+          "description" : "maven2 Asset 3 Classifier",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "maven2.asset3.extension",
+          "in" : "formData",
+          "description" : "maven2 Asset 3 Extension",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "npm.asset",
+          "in" : "formData",
+          "description" : "npm Asset ",
+          "required" : false,
+          "type" : "file"
+        }, {
+          "name" : "raw.directory",
+          "in" : "formData",
+          "description" : "raw Directory",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "raw.asset1",
+          "in" : "formData",
+          "description" : "raw Asset 1",
+          "required" : false,
+          "type" : "file"
+        }, {
+          "name" : "raw.asset1.filename",
+          "in" : "formData",
+          "description" : "raw Asset 1 Filename",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "raw.asset2",
+          "in" : "formData",
+          "description" : "raw Asset 2",
+          "required" : false,
+          "type" : "file"
+        }, {
+          "name" : "raw.asset2.filename",
+          "in" : "formData",
+          "description" : "raw Asset 2 Filename",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "raw.asset3",
+          "in" : "formData",
+          "description" : "raw Asset 3",
+          "required" : false,
+          "type" : "file"
+        }, {
+          "name" : "raw.asset3.filename",
+          "in" : "formData",
+          "description" : "raw Asset 3 Filename",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "403" : {
+            "description" : "Insufficient permissions to upload a component"
+          },
+          "422" : {
+            "description" : "Parameter 'repository' is required"
+          }
+        }
+      }
+    },
+    "/v1/search/assets" : {
+      "get" : {
+        "tags" : [ "search" ],
+        "summary" : "Search assets",
+        "description" : "",
+        "operationId" : "searchAssets",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "continuationToken",
+          "in" : "query",
+          "description" : "A token returned by a prior request. If present, the next page of results are returned",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "q",
+          "in" : "query",
+          "description" : "Query by keyword",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "repository",
+          "in" : "query",
+          "description" : "Repository name",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "format",
+          "in" : "query",
+          "description" : "Query by format",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "group",
+          "in" : "query",
+          "description" : "Component group",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "name",
+          "in" : "query",
+          "description" : "Component name",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "version",
+          "in" : "query",
+          "description" : "Component version",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "md5",
+          "in" : "query",
+          "description" : "Specific MD5 hash of component's asset",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "sha1",
+          "in" : "query",
+          "description" : "Specific SHA-1 hash of component's asset",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "sha256",
+          "in" : "query",
+          "description" : "Specific SHA-256 hash of component's asset",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "sha512",
+          "in" : "query",
+          "description" : "Specific SHA-512 hash of component's asset",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "docker.imageName",
+          "in" : "query",
+          "description" : "Docker image name",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "docker.imageTag",
+          "in" : "query",
+          "description" : "Docker image tag",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "docker.layerId",
+          "in" : "query",
+          "description" : "Docker layer ID",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "docker.contentDigest",
+          "in" : "query",
+          "description" : "Docker content digest",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "maven.groupId",
+          "in" : "query",
+          "description" : "Maven groupId",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "maven.artifactId",
+          "in" : "query",
+          "description" : "Maven artifactId",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "maven.baseVersion",
+          "in" : "query",
+          "description" : "Maven base version",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "maven.extension",
+          "in" : "query",
+          "description" : "Maven extension of component's asset",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "maven.classifier",
+          "in" : "query",
+          "description" : "Maven classifier of component's asset",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "npm.scope",
+          "in" : "query",
+          "description" : "NPM scope",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "nuget.id",
+          "in" : "query",
+          "description" : "Nuget id",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "nuget.tags",
+          "in" : "query",
+          "description" : "Nuget tags",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "pypi.classifiers",
+          "in" : "query",
+          "description" : "PyPi classifiers",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "pypi.description",
+          "in" : "query",
+          "description" : "PyPi description",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "pypi.keywords",
+          "in" : "query",
+          "description" : "PyPi keywords",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "pypi.summary",
+          "in" : "query",
+          "description" : "PyPi summary",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "rubygems.description",
+          "in" : "query",
+          "description" : "RubyGems description",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "rubygems.platform",
+          "in" : "query",
+          "description" : "RubyGems platform",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "rubygems.summary",
+          "in" : "query",
+          "description" : "RubyGems summary",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "yum.architecture",
+          "in" : "query",
+          "description" : "Yum architecture",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/PageAssetXO"
+            }
+          }
+        }
+      }
+    },
+    "/v1/search/assets/download" : {
+      "get" : {
+        "tags" : [ "search" ],
+        "summary" : "Search and download asset",
+        "description" : "Returns a 302 Found with location header field set to download URL. Search must return a single asset to receive download URL.",
+        "operationId" : "searchAndDownloadAssets",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "q",
+          "in" : "query",
+          "description" : "Query by keyword",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "repository",
+          "in" : "query",
+          "description" : "Repository name",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "format",
+          "in" : "query",
+          "description" : "Query by format",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "group",
+          "in" : "query",
+          "description" : "Component group",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "name",
+          "in" : "query",
+          "description" : "Component name",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "version",
+          "in" : "query",
+          "description" : "Component version",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "md5",
+          "in" : "query",
+          "description" : "Specific MD5 hash of component's asset",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "sha1",
+          "in" : "query",
+          "description" : "Specific SHA-1 hash of component's asset",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "sha256",
+          "in" : "query",
+          "description" : "Specific SHA-256 hash of component's asset",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "sha512",
+          "in" : "query",
+          "description" : "Specific SHA-512 hash of component's asset",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "docker.imageName",
+          "in" : "query",
+          "description" : "Docker image name",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "docker.imageTag",
+          "in" : "query",
+          "description" : "Docker image tag",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "docker.layerId",
+          "in" : "query",
+          "description" : "Docker layer ID",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "docker.contentDigest",
+          "in" : "query",
+          "description" : "Docker content digest",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "maven.groupId",
+          "in" : "query",
+          "description" : "Maven groupId",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "maven.artifactId",
+          "in" : "query",
+          "description" : "Maven artifactId",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "maven.baseVersion",
+          "in" : "query",
+          "description" : "Maven base version",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "maven.extension",
+          "in" : "query",
+          "description" : "Maven extension of component's asset",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "maven.classifier",
+          "in" : "query",
+          "description" : "Maven classifier of component's asset",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "npm.scope",
+          "in" : "query",
+          "description" : "NPM scope",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "nuget.id",
+          "in" : "query",
+          "description" : "Nuget id",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "nuget.tags",
+          "in" : "query",
+          "description" : "Nuget tags",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "pypi.classifiers",
+          "in" : "query",
+          "description" : "PyPi classifiers",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "pypi.description",
+          "in" : "query",
+          "description" : "PyPi description",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "pypi.keywords",
+          "in" : "query",
+          "description" : "PyPi keywords",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "pypi.summary",
+          "in" : "query",
+          "description" : "PyPi summary",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "rubygems.description",
+          "in" : "query",
+          "description" : "RubyGems description",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "rubygems.platform",
+          "in" : "query",
+          "description" : "RubyGems platform",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "rubygems.summary",
+          "in" : "query",
+          "description" : "RubyGems summary",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "yum.architecture",
+          "in" : "query",
+          "description" : "Yum architecture",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "400" : {
+            "description" : "Search returned multiple assets, please refine search criteria to find a single asset"
+          },
+          "404" : {
+            "description" : "Asset search returned no results"
+          }
+        }
+      }
+    },
+    "/v1/search" : {
+      "get" : {
+        "tags" : [ "search" ],
+        "summary" : "Search components",
+        "description" : "",
+        "operationId" : "search",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "continuationToken",
+          "in" : "query",
+          "description" : "A token returned by a prior request. If present, the next page of results are returned",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "q",
+          "in" : "query",
+          "description" : "Query by keyword",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "repository",
+          "in" : "query",
+          "description" : "Repository name",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "format",
+          "in" : "query",
+          "description" : "Query by format",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "group",
+          "in" : "query",
+          "description" : "Component group",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "name",
+          "in" : "query",
+          "description" : "Component name",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "version",
+          "in" : "query",
+          "description" : "Component version",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "md5",
+          "in" : "query",
+          "description" : "Specific MD5 hash of component's asset",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "sha1",
+          "in" : "query",
+          "description" : "Specific SHA-1 hash of component's asset",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "sha256",
+          "in" : "query",
+          "description" : "Specific SHA-256 hash of component's asset",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "sha512",
+          "in" : "query",
+          "description" : "Specific SHA-512 hash of component's asset",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "docker.imageName",
+          "in" : "query",
+          "description" : "Docker image name",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "docker.imageTag",
+          "in" : "query",
+          "description" : "Docker image tag",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "docker.layerId",
+          "in" : "query",
+          "description" : "Docker layer ID",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "docker.contentDigest",
+          "in" : "query",
+          "description" : "Docker content digest",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "maven.groupId",
+          "in" : "query",
+          "description" : "Maven groupId",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "maven.artifactId",
+          "in" : "query",
+          "description" : "Maven artifactId",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "maven.baseVersion",
+          "in" : "query",
+          "description" : "Maven base version",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "maven.extension",
+          "in" : "query",
+          "description" : "Maven extension of component's asset",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "maven.classifier",
+          "in" : "query",
+          "description" : "Maven classifier of component's asset",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "npm.scope",
+          "in" : "query",
+          "description" : "NPM scope",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "nuget.id",
+          "in" : "query",
+          "description" : "Nuget id",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "nuget.tags",
+          "in" : "query",
+          "description" : "Nuget tags",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "pypi.classifiers",
+          "in" : "query",
+          "description" : "PyPi classifiers",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "pypi.description",
+          "in" : "query",
+          "description" : "PyPi description",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "pypi.keywords",
+          "in" : "query",
+          "description" : "PyPi keywords",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "pypi.summary",
+          "in" : "query",
+          "description" : "PyPi summary",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "rubygems.description",
+          "in" : "query",
+          "description" : "RubyGems description",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "rubygems.platform",
+          "in" : "query",
+          "description" : "RubyGems platform",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "rubygems.summary",
+          "in" : "query",
+          "description" : "RubyGems summary",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "yum.architecture",
+          "in" : "query",
+          "description" : "Yum architecture",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/PageComponentXO"
+            }
+          }
+        }
+      }
+    },
+    "/v1/formats/upload-specs" : {
+      "get" : {
+        "tags" : [ "formats" ],
+        "summary" : "Get upload field requirements for each supported format",
+        "description" : "",
+        "operationId" : "get_1",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/UploadDefinitionXO"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/formats/{format}/upload-specs" : {
+      "get" : {
+        "tags" : [ "formats" ],
+        "summary" : "Get upload field requirements for the desired format",
+        "description" : "",
+        "operationId" : "get_2",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "format",
+          "in" : "path",
+          "description" : "The desired repository format",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/UploadDefinitionXO"
+            }
+          }
+        }
+      }
+    },
+    "/v1/repositories" : {
+      "get" : {
+        "tags" : [ "repositories" ],
+        "summary" : "List repositories",
+        "description" : "",
+        "operationId" : "getRepositories",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/RepositoryXO"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "ReadOnlyState" : {
+      "type" : "object",
+      "properties" : {
+        "summaryReason" : {
+          "type" : "string"
+        },
+        "systemInitiated" : {
+          "type" : "boolean"
+        },
+        "frozen" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "Page" : {
+      "type" : "object",
+      "properties" : {
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object"
+          }
+        },
+        "continuationToken" : {
+          "type" : "string"
+        }
+      }
+    },
+    "PageTaskXO" : {
+      "type" : "object",
+      "properties" : {
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/TaskXO"
+          }
+        },
+        "continuationToken" : {
+          "type" : "string"
+        }
+      }
+    },
+    "TaskXO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "currentState" : {
+          "type" : "string"
+        },
+        "lastRunResult" : {
+          "type" : "string"
+        },
+        "nextRun" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "lastRun" : {
+          "type" : "string",
+          "format" : "date-time"
+        }
+      }
+    },
+    "ScriptXO" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "pattern" : "^[a-zA-Z0-9\\-]{1}[a-zA-Z0-9_\\-\\.]*$"
+        },
+        "content" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ScriptResultXO" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "result" : {
+          "type" : "string"
+        }
+      }
+    },
+    "AssetXO" : {
+      "type" : "object",
+      "properties" : {
+        "downloadUrl" : {
+          "type" : "string"
+        },
+        "path" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "repository" : {
+          "type" : "string"
+        },
+        "format" : {
+          "type" : "string"
+        },
+        "checksum" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "object"
+          }
+        }
+      }
+    },
+    "PageAssetXO" : {
+      "type" : "object",
+      "properties" : {
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AssetXO"
+          }
+        },
+        "continuationToken" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ComponentXO" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "repository" : {
+          "type" : "string"
+        },
+        "format" : {
+          "type" : "string"
+        },
+        "group" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "version" : {
+          "type" : "string"
+        },
+        "assets" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AssetXO"
+          }
+        }
+      }
+    },
+    "PageComponentXO" : {
+      "type" : "object",
+      "properties" : {
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ComponentXO"
+          }
+        },
+        "continuationToken" : {
+          "type" : "string"
+        }
+      }
+    },
+    "UploadDefinitionXO" : {
+      "type" : "object",
+      "properties" : {
+        "format" : {
+          "type" : "string"
+        },
+        "multipleUpload" : {
+          "type" : "boolean"
+        },
+        "componentFields" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/UploadFieldDefinitionXO"
+          }
+        },
+        "assetFields" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/UploadFieldDefinitionXO"
+          }
+        }
+      }
+    },
+    "UploadFieldDefinitionXO" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "optional" : {
+          "type" : "boolean"
+        },
+        "group" : {
+          "type" : "string"
+        }
+      }
+    },
+    "RepositoryXO" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "format" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "url" : {
+          "type" : "string"
+        }
+      }
+    }
+  }
+}

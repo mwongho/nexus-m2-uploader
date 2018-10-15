@@ -1,0 +1,24 @@
+buildscript {
+  repositories {
+    maven { url "http://central.maven.org/maven2/" }
+  }
+  dependencies {
+    classpath "org.springframework.boot:spring-boot-gradle-plugin:2.0.5.RELEASE"
+  }
+}
+
+apply plugin: 'eclipse'
+apply plugin: "org.springframework.boot"
+apply plugin: 'io.spring.dependency-management'	
+ 
+dependencies {
+	compile project(':nexus-client')
+	compile('commons-io:commons-io:2.6')
+	compile('org.springframework.boot:spring-boot-starter')
+	
+	testCompile 'junit:junit:4.12'
+}
+ 
+configurations.all {
+    exclude group: "org.slf4j", module: "slf4j-simple"
+}
