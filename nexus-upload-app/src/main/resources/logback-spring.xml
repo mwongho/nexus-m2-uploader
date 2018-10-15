@@ -43,9 +43,5 @@
         <appender-ref ref="RollingFile" />
         <appender-ref ref="Console" />
     </logger>
-    <logger name="edu.uci.ics.crawler4j.crawler" level="debug" additivity="false">
-        <appender-ref ref="RollingFile" />
-        <appender-ref ref="Console" />
-    </logger>
  
 </configuration>
